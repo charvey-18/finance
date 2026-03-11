@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Three-Statement Interview Diagrams</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #0f172a;
+      --panel-muted: #cbd5e1;
+      --surface: rgba(255,255,255,0.84);
+      --surface-strong: #ffffff;
+      --border: #d7e0ea;
+      --text: #102030;
+      --muted: #526273;
+      --shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "SF Pro Text", "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(29, 78, 216, 0.10), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+    }
+    .layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: 100vh; }
+    .sidebar {
+      position: sticky; top: 0; height: 100vh; overflow: auto; padding: 28px 24px 32px;
+      background: radial-gradient(circle at top, rgba(20, 184, 166, 0.18), transparent 30%), linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: white; border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .eyebrow { margin: 0 0 12px; font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: #7dd3fc; }
+    .sidebar h1 { margin: 0; font-size: 1.55rem; line-height: 1.15; }
+    .sidebar p { color: var(--panel-muted); line-height: 1.55; font-size: 0.95rem; }
+    .toc-title { margin: 26px 0 12px; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: #93c5fd; }
+    .toc { display: grid; gap: 8px; }
+    .toc a {
+      display: block; padding: 10px 12px; border-radius: 12px; color: white; text-decoration: none;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+    .toc a:hover { transform: translateX(2px); background: rgba(255,255,255,0.08); border-color: rgba(125,211,252,0.35); }
+    .content-wrap { padding: 40px 36px 80px; }
+    .article-shell {
+      max-width: 1180px; margin: 0 auto; background: var(--surface); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.65); border-radius: 28px; box-shadow: var(--shadow); overflow: hidden;
+    }
+    .hero { padding: 34px 36px 26px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.72) 100%); }
+    .hero h2 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.08; }
+    .hero p { margin: 12px 0 0; max-width: 70ch; color: var(--muted); font-size: 1rem; line-height: 1.65; }
+    article { padding: 10px 36px 48px; }
+    article h1 { margin: 22px 0 10px; font-size: clamp(2rem, 3.4vw, 2.8rem); line-height: 1.05; }
+    article h2 { margin: 38px 0 14px; padding-top: 16px; font-size: clamp(1.35rem, 2.1vw, 1.8rem); border-top: 1px solid var(--border); }
+    article p, article li { font-size: 1rem; line-height: 1.72; color: var(--text); }
+    article p { margin: 0 0 14px; }
+    article ul, article ol { margin: 0 0 18px 1.25rem; padding: 0; }
+    article li + li { margin-top: 8px; }
+    article code {
+      font-family: "SFMono-Regular", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: rgba(15, 23, 42, 0.06); border-radius: 8px; padding: 0.14rem 0.4rem; font-size: 0.94em;
+    }
+    .mermaid {
+      margin: 24px 0 30px; padding: 26px; background: var(--surface-strong); border: 1px solid var(--border);
+      border-radius: 22px; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05); overflow: auto;
+    }
+    .mermaid svg { display: block; margin: 0 auto; max-width: none; height: auto; }
+    .muted-note {
+      margin-top: 22px; padding: 14px 16px; border-radius: 14px; background: rgba(15, 118, 110, 0.08);
+      border: 1px solid rgba(15, 118, 110, 0.18); color: #115e59; font-size: 0.95rem;
+    }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .content-wrap { padding: 18px 14px 42px; }
+      .hero, article { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="eyebrow">Browser Viewer</div>
+      <h1>Three-Statement Diagrams</h1>
+      <p>Standalone HTML view for the finance interview prep pack. This renders the Mermaid diagrams in-browser and gives you a cleaner reading layout than raw Markdown preview.</p>
+      <div class="toc-title">Sections</div>
+      <nav class="toc"><a href="#vertical-three-statement-reference">Vertical Three-Statement Reference</a><a href="#scope-notes-what-usually-counts-as-capex-and-nwc">Scope Notes: What usually counts as CapEx and NWC?</a><a href="#a-how-do-you-get-from-ebitda-to-levered-free-cash-flow">A. How do you get from EBITDA to levered free cash flow?</a><a href="#b-how-do-you-get-from-net-income-to-cash-from-operations">B. How do you get from net income to cash from operations?</a><a href="#c-how-do-changes-in-working-capital-flow-through-the-3-statements">C. How do changes in working capital flow through the 3 statements?</a><a href="#d-how-does-depreciation-affect-the-3-statements">D. How does depreciation affect the 3 statements?</a><a href="#e-how-does-capex-affect-the-3-statements">E. How does CapEx affect the 3 statements?</a><a href="#f-how-do-debt-issuance-and-debt-repayment-affect-the-3-statements">F. How do debt issuance and debt repayment affect the 3 statements?</a><a href="#g-how-does-interest-expense-affect-the-3-statements">G. How does interest expense affect the 3 statements?</a><a href="#h-how-do-taxes-flow-through-the-3-statements">H. How do taxes flow through the 3 statements?</a></nav>
+      <div class="muted-note">Open this file directly in a browser. If a diagram looks clipped, zoom out slightly or widen the window.</div>
+    </aside>
+    <main class="content-wrap">
+      <div class="article-shell">
+        <section class="hero">
+          <h2>Interview-Ready Three-Statement Walkthroughs</h2>
+          <p>The content below is rendered from the Markdown source and uses Mermaid for the diagrams, so you can study the same material in a wider, cleaner browser view.</p>
+        </section>
+        <article><h1>Three-Statement Interview Diagrams</h1>
+<p>These diagrams use one sign convention throughout:</p>
+<ul><li>Operating asset up = use of cash</li><li>Operating asset down = source of cash</li><li>Operating liability up = source of cash</li><li>Operating liability down = use of cash</li></ul>
+<p>Color key used below:</p>
+<ul><li>Blue = income statement</li><li>Green = cash flow statement</li><li>Amber = balance sheet</li><li>Red = use of cash</li><li>Mint = source of cash</li><li>Gray = note or bridge item</li></ul>
+<h2 id="vertical-three-statement-reference">Vertical Three-Statement Reference</h2>
+<p>This is the big-picture view. Each statement is stacked vertically so you can see how net income rolls into cash flow and how ending cash and retained earnings land on the balance sheet.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '24px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 60, 'rankSpacing': 90, 'useMaxWidth': true}} }%%
+flowchart TD
+  subgraph O_IS[&quot;Income Statement&quot;]
+    direction TB
+    O_REV[&quot;Revenue&quot;]
+    O_COGS[&quot;Less COGS&quot;]
+    O_GP[&quot;Gross profit&quot;]
+    O_OPEX[&quot;Less OpEx&quot;]
+    O_EBITDA[&quot;EBITDA&quot;]
+    O_DA[&quot;Less D&amp;A&quot;]
+    O_EBIT[&quot;EBIT&quot;]
+    O_INT[&quot;Less interest&quot;]
+    O_EBT[&quot;EBT&quot;]
+    O_TAX[&quot;Less taxes&quot;]
+    O_NI[&quot;Net income&quot;]
+    O_REV --&gt; O_COGS --&gt; O_GP --&gt; O_OPEX --&gt; O_EBITDA --&gt; O_DA --&gt; O_EBIT --&gt; O_INT --&gt; O_EBT --&gt; O_TAX --&gt; O_NI
+  end
+
+  subgraph O_CFS[&quot;Cash Flow Statement&quot;]
+    direction TB
+    O_NI2[&quot;Net income&quot;]
+    O_NON[&quot;Add back D&amp;A and other non-cash&quot;]
+    O_WC[&quot;Adjust delta NWC&quot;]
+    O_CFO[&quot;CFO&quot;]
+    O_CAPEX[&quot;CapEx&quot;]
+    O_CFI[&quot;CFI&quot;]
+    O_FIN[&quot;Debt and equity flows&quot;]
+    O_CFF[&quot;CFF&quot;]
+    O_NC[&quot;Net change in cash&quot;]
+    O_NI2 --&gt; O_NON --&gt; O_WC --&gt; O_CFO --&gt; O_CAPEX --&gt; O_CFI --&gt; O_FIN --&gt; O_CFF --&gt; O_NC
+  end
+
+  subgraph O_BS[&quot;Balance Sheet&quot;]
+    direction TB
+    O_CASH[&quot;Cash&quot;]
+    O_OA[&quot;Operating assets&quot;]
+    O_PPE[&quot;PP&amp;E&quot;]
+    O_OL[&quot;Operating liabilities&quot;]
+    O_DEBT[&quot;Debt&quot;]
+    O_RE[&quot;Retained earnings&quot;]
+    O_CASH --&gt; O_OA --&gt; O_PPE --&gt; O_OL --&gt; O_DEBT --&gt; O_RE
+  end
+
+  O_NI --&gt;|start CFS with NI| O_NI2
+  O_NC --&gt;|net change updates cash| O_CASH
+  O_NI -.-&gt;|NI closes to RE| O_RE
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+  classDef note fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px;
+
+  class O_REV,O_COGS,O_GP,O_OPEX,O_EBITDA,O_DA,O_EBIT,O_INT,O_EBT,O_TAX,O_NI is;
+  class O_NI2,O_NON,O_WC,O_CFO,O_CAPEX,O_CFI,O_FIN,O_CFF,O_NC cfs;
+  class O_CASH,O_OA,O_PPE,O_OL,O_DEBT,O_RE bs;
+
+  style O_IS fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px,color:#0f172a
+  style O_CFS fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d
+  style O_BS fill:#fff7ed,stroke:#b45309,stroke-width:2px,color:#78350f</div>
+<h2 id="scope-notes-what-usually-counts-as-capex-and-nwc">Scope Notes: What usually counts as CapEx and NWC?</h2>
+<p><code>CapEx</code> and <code>delta NWC</code> are where interview answers often get sloppy. In a clean interview answer, define them explicitly: <code>CapEx</code> is capitalized operating investment in long-lived assets, and <code>operating NWC</code> is operating current assets minus operating current liabilities. Company definitions can vary, so it is good practice to state your scope before walking through the bridge.</p>
+<p>Quick definitions:</p>
+<ul><li><code>Accounts receivable (AR)</code>: money customers owe the company because revenue was booked before cash was collected. It is an operating asset.</li><li><code>Accounts payable (AP)</code>: money the company owes suppliers or vendors because inventory or expense was booked before cash was paid. It is an operating liability.</li><li><code>Prepaids</code>: cash the company paid upfront for a future expense. It is an operating asset until the expense is recognized.</li><li><code>Accrued expenses</code>: expenses already recognized on the income statement but not yet paid in cash. They are operating liabilities.</li><li><code>Deferred revenue</code>: cash collected before the company recognizes the revenue. It is an operating liability until the revenue is earned.</li></ul>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 55, 'rankSpacing': 85, 'useMaxWidth': true}} }%%
+flowchart TD
+  subgraph S_NWC[&quot;Operating NWC scope&quot;]
+    S_NWC0[&quot;Operating NWC = operating current assets - operating current liabilities&quot;]
+    S_NWC0 --&gt; S_NWCA[&quot;Usually include asset side&quot;]
+    S_NWC0 --&gt; S_NWCL[&quot;Usually include liability side&quot;]
+    S_NWC0 --&gt; S_NWCX[&quot;Usually exclude&quot;]
+
+    S_NWCA --&gt; S_AR[&quot;Accounts receivable&quot;]
+    S_NWCA --&gt; S_INV[&quot;Inventory&quot;]
+    S_NWCA --&gt; S_PRE[&quot;Prepaids&quot;]
+
+    S_NWCL --&gt; S_AP[&quot;Accounts payable&quot;]
+    S_NWCL --&gt; S_ACC[&quot;Accrued expenses&quot;]
+    S_NWCL --&gt; S_DEF[&quot;Deferred revenue&quot;]
+
+    S_NWCX --&gt; S_CASH[&quot;Cash and marketable securities&quot;]
+    S_NWCX --&gt; S_DEBT[&quot;Debt and current maturities&quot;]
+    S_NWCX --&gt; S_TAX[&quot;Taxes and interest payable&quot;]
+    S_NWCX --&gt; S_NONOP[&quot;One-time or non-operating items&quot;]
+  end
+
+  subgraph S_CAP[&quot;CapEx scope&quot;]
+    S_CAP0[&quot;CapEx = capitalized operating investment&quot;]
+    S_CAP0 --&gt; S_CAPI[&quot;Usually include&quot;]
+    S_CAP0 --&gt; S_CAPX[&quot;Usually not included&quot;]
+
+    S_CAPI --&gt; S_PPE[&quot;PP&amp;E purchases&quot;]
+    S_CAPI --&gt; S_BUILD[&quot;Leasehold improvements and build-outs&quot;]
+    S_CAPI --&gt; S_EQUIP[&quot;Equipment, vehicles, servers&quot;]
+    S_CAPI --&gt; S_SOFT[&quot;Capitalized software&quot;]
+    S_CAPI --&gt; S_MG[&quot;Maintenance and growth CapEx&quot;]
+
+    S_CAPX --&gt; S_REPAIR[&quot;Routine repairs in OpEx&quot;]
+    S_CAPX --&gt; S_MA[&quot;M&amp;A or business acquisitions&quot;]
+    S_CAPX --&gt; S_FIN[&quot;Debt principal or other financing uses&quot;]
+  end
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+  classDef use fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.5px;
+  classDef note fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px;
+
+  class S_NWC0,S_CAP0 note;
+  class S_NWCA,S_NWCL,S_CAPI cfs;
+  class S_AR,S_INV,S_PRE,S_AP,S_ACC,S_DEF,S_PPE,S_BUILD,S_EQUIP,S_SOFT,S_MG bs;
+  class S_NWCX,S_CAPX,S_CASH,S_DEBT,S_TAX,S_NONOP,S_REPAIR,S_MA,S_FIN use;
+
+  style S_NWC fill:#fff7ed,stroke:#b45309,stroke-width:2px,color:#78350f
+  style S_CAP fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d</div>
+<p>Interview script:</p>
+<ul><li>In interview shorthand, operating NWC usually means <code>AR + inventory + prepaids - AP - accrued expenses - deferred revenue</code>.</li><li>I usually exclude cash, debt, marketable securities, and other non-operating items unless the case tells me otherwise.</li><li>CapEx is capitalized spend on long-lived operating assets, not just any cash outflow.</li><li>Typical CapEx includes PP&amp;E, store or facility build-outs, equipment, and sometimes capitalized software.</li><li>Routine repairs and maintenance usually stay in operating expenses, so they are not CapEx.</li><li>In valuation, I may separate maintenance CapEx from growth CapEx if the question is about steady-state cash flow.</li><li>If the company uses a different definition, I say the exact scope before walking through the cash flow bridge.</li></ul>
+<h2 id="a-how-do-you-get-from-ebitda-to-levered-free-cash-flow">A. How do you get from EBITDA to levered free cash flow?</h2>
+<p>EBITDA is an earnings proxy, not cash flow. To get to levered free cash flow, you move from operating profit before non-cash charges to actual cash left after taxes, interest, CapEx, working capital needs, and, if relevant, required debt paydown. For interview purposes, <code>CapEx</code> usually means capitalized operating investment, and <code>delta NWC</code> usually means the change in operating current assets and operating current liabilities, not every balance sheet current item.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 50, 'rankSpacing': 80, 'useMaxWidth': true}} }%%
+flowchart TD
+  subgraph A1[&quot;Bridge 1: EBITDA route&quot;]
+    A_EBITDA[&quot;EBITDA (IS)&quot;] --&gt;|less cash taxes| A_TAX[&quot;After-tax operating cash&quot;]
+    A_TAX --&gt;|less cash interest| A_INT[&quot;After-interest cash&quot;]
+    A_INT --&gt;|less CapEx| A_CAP[&quot;After CapEx&quot;]
+    A_CAP --&gt;|minus NWC up plus NWC down| A_WC[&quot;After NWC&quot;]
+    A_WC --&gt;|less mandatory debt amort.| A_LFCF[&quot;Levered FCF&quot;]
+  end
+
+  subgraph A2[&quot;Bridge 2: Equivalent NI route&quot;]
+    A_NI[&quot;Net income (IS)&quot;] --&gt;|add D&amp;A| A_DA[&quot;Add back D&amp;A&quot;]
+    A_DA --&gt;|+/- other non-cash items| A_NON[&quot;Cash earnings before WC&quot;]
+    A_NON --&gt;|minus NWC up plus NWC down| A_CFO[&quot;CFO&quot;]
+    A_CFO --&gt;|less CapEx| A_POSTCAP[&quot;Cash after CapEx&quot;]
+    A_POSTCAP --&gt;|less mandatory debt amort.| A_LFCF
+  end
+
+  A_CT[&quot;Cash taxes (CFS; taxes payable on BS)&quot;] -.-&gt;|subtract| A_TAX
+  A_CI[&quot;Cash interest (CFS; debt on BS)&quot;] -.-&gt;|subtract| A_INT
+  A_CX[&quot;CapEx (CFI; PP&amp;E on BS)&quot;] -.-&gt;|subtract| A_CAP
+  A_NWCNOTE[&quot;Delta NWC (BS into CFO) Asset up = use Liability up = source&quot;] -.-&gt;|adjust| A_WC
+  A_DEBT[&quot;Mandatory amort. (CFF; debt down on BS)&quot;] -.-&gt;|subtract| A_LFCF
+  A_CAPWHAT[&quot;CapEx usually = PP&amp;E, build-outs, equipment, capitalized software&quot;] -.-&gt; A_CX
+  A_NWCWHAT[&quot;Operating NWC usually = AR + inventory + prepaids - AP - accrued - deferred rev&quot;] -.-&gt; A_NWCNOTE
+  A_NWCEX[&quot;Usually exclude cash, debt, taxes, and one-time items&quot;] -.-&gt; A_NWCNOTE
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef note fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px;
+  classDef result fill:#ccfbf1,stroke:#0f766e,color:#134e4a,stroke-width:2px;
+
+  class A_EBITDA,A_NI is;
+  class A_TAX,A_INT,A_CAP,A_CFO,A_POSTCAP,A_CT,A_CI,A_CX,A_DEBT cfs;
+  class A_DA,A_NON,A_NWCNOTE,A_CAPWHAT,A_NWCWHAT,A_NWCEX note;
+  class A_WC,A_LFCF result;</div>
+<p>Interview script:</p>
+<ul><li>Start with EBITDA, which is before interest, taxes, and non-cash D&amp;A.</li><li>Subtract cash taxes and cash interest, because levered free cash flow is after both.</li><li>Here, CapEx usually means capitalized operating spend like equipment, facilities, build-outs, and capitalized software.</li><li>Subtract CapEx, because that is a real cash outflow even though it is not an immediate income statement expense.</li><li>Then adjust for changes in net working capital: operating NWC usually means AR, inventory, prepaids, AP, accrued expenses, and deferred revenue.</li><li>NWC up is a use of cash, NWC down is a source of cash, but I usually exclude cash, debt, taxes, and one-time items unless told otherwise.</li><li>If the company has required debt amortization, subtract that too to get the cash left for equity.</li><li>The equivalent bridge is net income plus D&amp;A and other non-cash items, minus CapEx, minus or plus delta NWC, and minus required principal paydown.</li><li>A common interview trap is calling EBITDA cash flow; it is only the starting point.</li></ul>
+<h2 id="b-how-do-you-get-from-net-income-to-cash-from-operations">B. How do you get from net income to cash from operations?</h2>
+<p>Under the indirect method, cash from operations starts with net income, then reverses non-cash items and timing differences. The goal is to turn accounting profit into cash generated by the core business in the period. The working capital adjustment here is usually <code>operating</code> working capital, not cash, debt, or financing items.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 50, 'rankSpacing': 80, 'useMaxWidth': true}} }%%
+flowchart TD
+  subgraph B1[&quot;Income Statement&quot;]
+    B_NI[&quot;Net income (IS)&quot;]
+  end
+
+  subgraph B2[&quot;Non-cash and non-op adjustments&quot;]
+    B_DA[&quot;D&amp;A&quot;]
+    B_ONC[&quot;Other non-cash items&quot;]
+    B_GLS[&quot;Remove non-op gains / losses&quot;]
+  end
+
+  subgraph B3[&quot;Working capital from BS&quot;]
+    B_ASSET[&quot;AR / inventory / prepaids&quot;]
+    B_LIAB[&quot;AP / accrued / deferred rev&quot;]
+  end
+
+  B_NI --&gt;|start here| B_PRE[&quot;Cash earnings before WC&quot;]
+  B_DA --&gt;|add back| B_PRE
+  B_ONC --&gt;|add back| B_PRE
+  B_GLS --&gt;|reverse if needed| B_PRE
+  B_PRE --&gt;|adjust delta working capital| B_CFO[&quot;CFO (CFS)&quot;]
+
+  B_ASSET -.-&gt;|up = use of cash down = source of cash| B_CFO
+  B_LIAB -.-&gt;|up = source of cash down = use of cash| B_CFO
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+  classDef note fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px;
+
+  class B_NI is;
+  class B_CFO cfs;
+  class B_ASSET,B_LIAB bs;
+  class B_DA,B_ONC,B_GLS,B_PRE note;</div>
+<p>Interview script:</p>
+<ul><li>Start with net income because the cash flow statement reconciles accounting earnings to cash.</li><li>Add back non-cash expenses like depreciation, amortization, and other non-cash charges.</li><li>Reverse non-operating gains or losses if they affected net income but belong somewhere else in cash flow.</li><li>Then adjust for working capital timing items from the balance sheet, usually AR, inventory, prepaids, AP, accrued expenses, and deferred revenue.</li><li>If operating assets go up, cash goes down; if they go down, cash goes up.</li><li>If operating liabilities go up, cash goes up; if they go down, cash goes down.</li><li>I usually do not include cash, debt, or other financing items in that operating NWC adjustment.</li><li>The result is cash from operations, which is cash generated by the core business before investing and financing flows.</li></ul>
+<h2 id="c-how-do-changes-in-working-capital-flow-through-the-3-statements">C. How do changes in working capital flow through the 3 statements?</h2>
+<p>Working capital changes are timing differences between the income statement and actual cash movement. The balance sheet captures the asset or liability build, and the cash flow statement converts that change into a source or use of cash. In most interview settings, operating NWC means <code>AR + inventory + prepaids - AP - accrued expenses - deferred revenue</code>, while cash, debt, and most tax items are treated separately. <code>AR</code> means receivables from customers; <code>AP</code> means payables owed to suppliers. <code>Prepaids</code> are cash paid before expense recognition, <code>accrued expenses</code> are expenses recognized before cash payment, and <code>deferred revenue</code> is cash received before revenue recognition.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 50, 'rankSpacing': 80, 'useMaxWidth': true}} }%%
+flowchart TD
+  subgraph C_ASSETS[&quot;Operating assets: increase = use, decrease = source&quot;]
+    subgraph C_AR[&quot;AR (BS asset; tied to revenue on IS)&quot;]
+      C_AR1[&quot;Revenue booked, cash later&quot;] --&gt; C_ARU[&quot;AR up&quot;] --&gt;|Use of cash| C_ARC1[&quot;CFO down (CFS)&quot;]
+      C_AR2[&quot;Receivables collected&quot;] --&gt; C_ARD[&quot;AR down&quot;] --&gt;|Source of cash| C_ARC2[&quot;CFO up (CFS)&quot;]
+    end
+
+    subgraph C_INV[&quot;Inventory (BS asset; tied to COGS on IS)&quot;]
+      C_INV1[&quot;Buy or build more than sold&quot;] --&gt; C_INVU[&quot;Inventory up&quot;] --&gt;|Use of cash| C_INVC1[&quot;CFO down (CFS)&quot;]
+      C_INV2[&quot;Sell existing stock or buy less&quot;] --&gt; C_INVD[&quot;Inventory down&quot;] --&gt;|Source of cash| C_INVC2[&quot;CFO up (CFS)&quot;]
+    end
+
+    subgraph C_PRE[&quot;Prepaids (BS asset; tied to opex on IS)&quot;]
+      C_PRE1[&quot;Cash paid before expense&quot;] --&gt; C_PREU[&quot;Prepaids up&quot;] --&gt;|Use of cash| C_PREC1[&quot;CFO down (CFS)&quot;]
+      C_PRE2[&quot;Expense recognized, no new cash&quot;] --&gt; C_PRED[&quot;Prepaids down&quot;] --&gt;|Source of cash| C_PREC2[&quot;CFO up (CFS)&quot;]
+    end
+  end
+
+  subgraph C_LIAB[&quot;Operating liabilities: increase = source, decrease = use&quot;]
+    subgraph C_AP[&quot;AP (BS liability; tied to inventory or opex)&quot;]
+      C_AP1[&quot;Expense booked, supplier unpaid&quot;] --&gt; C_APU[&quot;AP up&quot;] --&gt;|Source of cash| C_APC1[&quot;CFO up (CFS)&quot;]
+      C_AP2[&quot;Supplier paid&quot;] --&gt; C_APD[&quot;AP down&quot;] --&gt;|Use of cash| C_APC2[&quot;CFO down (CFS)&quot;]
+    end
+
+    subgraph C_ACC[&quot;Accrued expenses (BS liability; tied to opex on IS)&quot;]
+      C_ACC1[&quot;Expense booked, cash unpaid&quot;] --&gt; C_ACCU[&quot;Accrued exp up&quot;] --&gt;|Source of cash| C_ACCC1[&quot;CFO up (CFS)&quot;]
+      C_ACC2[&quot;Accrual paid&quot;] --&gt; C_ACCD[&quot;Accrued exp down&quot;] --&gt;|Use of cash| C_ACCC2[&quot;CFO down (CFS)&quot;]
+    end
+
+    subgraph C_DEF[&quot;Deferred revenue (BS liability; tied to revenue on IS)&quot;]
+      C_DEF1[&quot;Cash received before revenue&quot;] --&gt; C_DEFU[&quot;Deferred rev up&quot;] --&gt;|Source of cash| C_DEFC1[&quot;CFO up (CFS)&quot;]
+      C_DEF2[&quot;Revenue recognized from prior cash&quot;] --&gt; C_DEFD[&quot;Deferred rev down&quot;] --&gt;|Use of cash| C_DEFC2[&quot;CFO down (CFS)&quot;]
+    end
+  end
+
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+  classDef use fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.5px;
+  classDef source fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:1.5px;
+  classDef note fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px;
+
+  class C_ARU,C_INVU,C_PREU,C_APD,C_ACCD,C_DEFD,C_ARC1,C_INVC1,C_PREC1,C_APC2,C_ACCC2,C_DEFC2 use;
+  class C_ARD,C_INVD,C_PRED,C_APU,C_ACCU,C_DEFU,C_ARC2,C_INVC2,C_PREC2,C_APC1,C_ACCC1,C_DEFC1 source;
+  class C_AR1,C_AR2,C_INV1,C_INV2,C_PRE1,C_PRE2,C_AP1,C_AP2,C_ACC1,C_ACC2,C_DEF1,C_DEF2 note;
+
+  style C_ASSETS fill:#fff7ed,stroke:#ea580c,stroke-width:2px,color:#431407
+  style C_LIAB fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#14532d
+  style C_AR fill:#fffbeb,stroke:#b45309,stroke-width:1.5px,color:#78350f
+  style C_INV fill:#fffbeb,stroke:#b45309,stroke-width:1.5px,color:#78350f
+  style C_PRE fill:#fffbeb,stroke:#b45309,stroke-width:1.5px,color:#78350f
+  style C_AP fill:#fffbeb,stroke:#b45309,stroke-width:1.5px,color:#78350f
+  style C_ACC fill:#fffbeb,stroke:#b45309,stroke-width:1.5px,color:#78350f
+  style C_DEF fill:#fffbeb,stroke:#b45309,stroke-width:1.5px,color:#78350f</div>
+<p>Interview script:</p>
+<ul><li>Working capital is mostly about timing between the income statement and cash.</li><li>AR is money customers owe you after you book revenue; it is an operating asset.</li><li>AP is money you owe suppliers after you book inventory or expense; it is an operating liability.</li><li>In interviews, I usually define operating NWC as AR, inventory, and prepaids minus AP, accrued expenses, and deferred revenue.</li><li>For AR, up means you booked revenue but did not collect cash yet, so cash is down; down means collection, so cash is up.</li><li>For inventory and prepaids, up means cash went out before the expense fully hit earnings, so that is a use of cash.</li><li>For AP and accrued expenses, up means you recognized expense but have not paid cash yet, so that is a source of cash.</li><li>For deferred revenue, up means you got cash before recognizing revenue, so cash is up even though revenue is still deferred.</li><li>I usually exclude cash, debt, interest payable, and taxes payable from this operating NWC bucket unless the question defines it differently.</li><li>The core sign rule is simple: operating asset up equals use, operating liability up equals source.</li><li>A common trap is flipping the sign on AR or inventory; both are assets, so an increase consumes cash.</li></ul>
+<h2 id="d-how-does-depreciation-affect-the-3-statements">D. How does depreciation affect the 3 statements?</h2>
+<p>Depreciation lowers accounting earnings but does not use cash in the current period. The key interview point is that it reduces EBIT and net income on the income statement, gets added back on the cash flow statement, and reduces net PP&amp;E on the balance sheet.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 50, 'rankSpacing': 80, 'useMaxWidth': true}} }%%
+flowchart LR
+  subgraph D_IS[&quot;Income Statement&quot;]
+    D_DEP[&quot;Depreciation expense&quot;] --&gt;|non-cash expense| D_EBIT[&quot;EBIT down&quot;]
+    D_EBIT --&gt; D_TAX[&quot;Taxes down&quot;]
+    D_TAX --&gt; D_NI[&quot;Net income down&quot;]
+  end
+
+  subgraph D_CFS[&quot;Cash Flow Statement&quot;]
+    D_NI --&gt; D_CFO1[&quot;CFO starts lower via NI&quot;]
+    D_DEP --&gt;|add back: no cash left today| D_ADD[&quot;Add back depreciation&quot;]
+    D_CFO1 --&gt; D_CFO2[&quot;CFO after add-back&quot;]
+    D_ADD --&gt; D_CFO2
+    D_TAX --&gt;|lower cash taxes| D_SHIELD[&quot;Tax shield&quot;]
+    D_SHIELD --&gt; D_CFO2
+  end
+
+  subgraph D_BS[&quot;Balance Sheet&quot;]
+    D_PPE[&quot;Net PP&amp;E down&quot;]
+    D_CASH[&quot;Cash up by tax shield&quot;]
+    D_RE[&quot;Retained earnings down after tax&quot;]
+  end
+
+  D_DEP --&gt;|contra asset effect| D_PPE
+  D_CFO2 --&gt; D_CASH
+  D_NI --&gt; D_RE
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+
+  class D_DEP,D_EBIT,D_TAX,D_NI is;
+  class D_CFO1,D_ADD,D_CFO2,D_SHIELD cfs;
+  class D_PPE,D_CASH,D_RE bs;</div>
+<p>Interview script:</p>
+<ul><li>Depreciation is an expense on the income statement, so EBIT and net income go down.</li><li>It is non-cash, so you add it back in cash from operations.</li><li>That means depreciation does not reduce cash by itself in the current period.</li><li>The real cash effect is the tax shield, because lower pretax income means lower cash taxes.</li><li>On the balance sheet, net PP&amp;E goes down because accumulated depreciation rises.</li><li>Retained earnings also go down because net income is lower.</li><li>The classic interview trap is saying depreciation is a cash expense; it is not.</li></ul>
+<h2 id="e-how-does-capex-affect-the-3-statements">E. How does CapEx affect the 3 statements?</h2>
+<p>CapEx is a real cash outflow, but it is capitalized on the balance sheet rather than expensed immediately on the income statement. The income statement effect comes later through depreciation or amortization. In practice, CapEx often includes PP&amp;E purchases, equipment, leasehold improvements, facilities build-outs, and sometimes capitalized software. It usually does not include routine repairs, which stay in operating expenses.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 50, 'rankSpacing': 80, 'useMaxWidth': true}} }%%
+flowchart LR
+  subgraph E_CFS[&quot;Cash Flow Statement&quot;]
+    E_CAP[&quot;CapEx spend&quot;] --&gt;|use of cash in CFI| E_CASHNOW[&quot;Cash down now&quot;]
+    E_DEP2[&quot;Later depreciation&quot;] --&gt;|added back in CFO| E_CFOADD[&quot;CFO add-back later&quot;]
+  end
+
+  subgraph E_BS[&quot;Balance Sheet&quot;]
+    E_PPE[&quot;Gross PP&amp;E up now&quot;]
+    E_CASHBS[&quot;Cash down&quot;]
+    E_NPPE[&quot;Net PP&amp;E down later via depreciation&quot;]
+    E_RE[&quot;Retained earnings down later&quot;]
+  end
+
+  subgraph E_IS[&quot;Income Statement&quot;]
+    E_NOIS[&quot;No immediate P&amp;L hit&quot;]
+    E_DEP[&quot;Future depreciation&quot;]
+    E_EARN[&quot;EBIT and NI down later&quot;]
+  end
+
+  E_CAP --&gt;|capitalized, not expensed now| E_PPE
+  E_CAP --&gt; E_NOIS
+  E_CASHNOW --&gt; E_CASHBS
+  E_PPE --&gt;|over useful life| E_DEP
+  E_DEP --&gt; E_EARN
+  E_DEP --&gt; E_DEP2
+  E_DEP --&gt; E_NPPE
+  E_EARN --&gt; E_RE
+  E_CAPIN[&quot;Includes PP&amp;E, equipment, build-outs, capitalized software&quot;] -.-&gt; E_CAP
+  E_CAPOUT[&quot;Repairs stay in OpEx; M&amp;A is separate&quot;] -.-&gt; E_NOIS
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+  classDef note fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px;
+
+  class E_DEP,E_EARN is;
+  class E_CAP,E_CASHNOW,E_DEP2,E_CFOADD cfs;
+  class E_PPE,E_CASHBS,E_NPPE,E_RE bs;
+  class E_NOIS,E_CAPIN,E_CAPOUT note;</div>
+<p>Interview script:</p>
+<ul><li>CapEx is cash going out today, so it shows up as a use of cash in investing cash flow.</li><li>CapEx usually includes long-lived operating investment like PP&amp;E, equipment, build-outs, and sometimes capitalized software.</li><li>It does not hit the income statement right away because you capitalize it on the balance sheet.</li><li>Immediately, cash goes down and PP&amp;E goes up.</li><li>Over time, the asset is depreciated, and that depreciation reduces EBIT and net income.</li><li>That later depreciation is non-cash, so it gets added back in CFO.</li><li>Routine repairs usually stay in opex, and I may separate maintenance CapEx from growth CapEx in valuation work.</li><li>The trap here is treating CapEx like an operating expense; it is not an immediate income statement item.</li></ul>
+<h2 id="f-how-do-debt-issuance-and-debt-repayment-affect-the-3-statements">F. How do debt issuance and debt repayment affect the 3 statements?</h2>
+<p>Debt principal flows through financing, not operations. Issuing debt brings in cash and raises the debt balance; repaying principal uses cash and lowers the debt balance. The income statement is affected later through interest expense, not by principal itself.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 50, 'rankSpacing': 80, 'useMaxWidth': true}} }%%
+flowchart TD
+  subgraph F_ISS[&quot;Debt issuance&quot;]
+    F_I1[&quot;Issue debt&quot;] --&gt; F_B1[&quot;Debt up (BS)&quot;]
+    F_I1 --&gt;|Source of cash| F_C1[&quot;Cash up (CFF and BS)&quot;]
+    F_B1 --&gt;|later| F_IS1[&quot;Future interest expense up (IS)&quot;]
+  end
+
+  subgraph F_REP[&quot;Debt repayment&quot;]
+    F_R1[&quot;Repay principal&quot;] --&gt; F_B2[&quot;Debt down (BS)&quot;]
+    F_R1 --&gt;|Use of cash| F_C2[&quot;Cash down (CFF and BS)&quot;]
+    F_R1 --&gt; F_NO[&quot;No immediate P&amp;L effect&quot;]
+    F_B2 --&gt;|later| F_IS2[&quot;Future interest expense down (IS)&quot;]
+  end
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+  classDef use fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.5px;
+  classDef source fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:1.5px;
+  classDef note fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.5px;
+
+  class F_I1,F_C1 source;
+  class F_R1,F_C2 use;
+  class F_B1,F_B2 bs;
+  class F_IS1,F_IS2 is;
+  class F_NO note;</div>
+<p>Interview script:</p>
+<ul><li>New debt issuance is a financing inflow, so cash goes up and debt on the balance sheet goes up.</li><li>There is no immediate operating income statement benefit from issuing debt.</li><li>The income statement effect comes later because more debt usually means more interest expense.</li><li>Debt repayment is the reverse: cash goes down and debt goes down.</li><li>Principal repayment does not run through the income statement.</li><li>Lower debt usually means lower future interest expense.</li><li>A common trap is mixing up principal and interest; principal hits financing, interest hits earnings and usually CFO.</li></ul>
+<h2 id="g-how-does-interest-expense-affect-the-3-statements">G. How does interest expense affect the 3 statements?</h2>
+<p>Interest expense is an income statement item driven by the debt balance and interest rate. It lowers pretax income and net income, usually reduces CFO through cash interest paid, and does not by itself change the debt principal balance.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 50, 'rankSpacing': 80, 'useMaxWidth': true}} }%%
+flowchart LR
+  subgraph G_BS[&quot;Balance Sheet&quot;]
+    G_DEBT[&quot;Debt balance&quot;]
+    G_PAY[&quot;Interest payable&quot;]
+    G_CASH[&quot;Cash down when paid&quot;]
+    G_RE[&quot;Retained earnings down&quot;]
+  end
+
+  subgraph G_IS[&quot;Income Statement&quot;]
+    G_INT[&quot;Interest expense&quot;] --&gt; G_EBT[&quot;EBT down&quot;]
+    G_EBT --&gt; G_TAX[&quot;Taxes down&quot;]
+    G_TAX --&gt; G_NI[&quot;Net income down&quot;]
+  end
+
+  subgraph G_CFS[&quot;Cash Flow Statement&quot;]
+    G_NI --&gt; G_CFO[&quot;CFO lower via NI&quot;]
+    G_CPAY[&quot;Cash interest paid (usually CFO)&quot;]
+  end
+
+  G_DEBT --&gt;|rate x balance| G_INT
+  G_INT --&gt;|usually cash, not added back| G_CPAY
+  G_CPAY --&gt;|cash outflow| G_CASH
+  G_NI --&gt; G_RE
+  G_INT -.-&gt;|if unpaid yet| G_PAY
+  G_PAY -.-&gt;|Payable up = source now Payable down = use later| G_CPAY
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+  classDef use fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.5px;
+
+  class G_INT,G_EBT,G_TAX,G_NI is;
+  class G_CFO cfs;
+  class G_DEBT,G_PAY,G_CASH,G_RE bs;
+  class G_CPAY use;</div>
+<p>Interview script:</p>
+<ul><li>Interest expense comes from the debt balance times the interest rate.</li><li>It reduces EBT, which reduces taxes, and net income still falls on an after-tax basis.</li><li>Because it is generally a real cash cost, you do not add it back like depreciation.</li><li>Under the usual interview convention, cash interest paid sits in CFO.</li><li>The debt principal balance does not change just because you recorded interest expense.</li><li>If interest accrues but is not yet paid, interest payable goes up and cash is temporarily higher.</li><li>The trap is saying debt goes down from interest expense alone; only principal repayment reduces debt.</li></ul>
+<h2 id="h-how-do-taxes-flow-through-the-3-statements">H. How do taxes flow through the 3 statements?</h2>
+<p>Tax expense on the income statement is not always equal to cash taxes paid. The balance sheet holds the timing difference in taxes payable and deferred tax accounts, and the cash flow statement reconciles accounting tax expense to actual cash paid.</p>
+<div class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '22px'}, 'flowchart': {'htmlLabels': true, 'nodeSpacing': 50, 'rankSpacing': 80, 'useMaxWidth': true}} }%%
+flowchart LR
+  subgraph H_IS[&quot;Income Statement&quot;]
+    H_PBT[&quot;Pretax income&quot;] --&gt; H_TEXP[&quot;Tax expense&quot;]
+    H_TEXP --&gt; H_NI[&quot;Net income&quot;]
+  end
+
+  subgraph H_BS[&quot;Balance Sheet&quot;]
+    H_TP[&quot;Taxes payable&quot;]
+    H_DT[&quot;DTA / DTL&quot;]
+    H_CASH[&quot;Cash down when taxes are paid&quot;]
+    H_RE[&quot;Retained earnings down&quot;]
+  end
+
+  subgraph H_CFS[&quot;Cash Flow Statement&quot;]
+    H_NI --&gt; H_CFO0[&quot;CFO starts with NI&quot;]
+    H_DTAJ[&quot;Deferred tax adjustment&quot;]
+    H_CFO[&quot;CFO after tax timing&quot;]
+    H_CFO0 --&gt; H_CFO
+    H_DTAJ --&gt; H_CFO
+  end
+
+  H_TEXP --&gt;|current tax| H_TP
+  H_TEXP --&gt;|timing differences| H_DT
+  H_DT --&gt;|non-cash tax timing| H_DTAJ
+  H_TP -.-&gt;|Taxes payable up = source Taxes payable down = use| H_CFO
+  H_TP --&gt;|cash payment| H_CASH
+  H_NI --&gt; H_RE
+
+  classDef is fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
+  classDef cfs fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.5px;
+  classDef bs fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:1.5px;
+
+  class H_PBT,H_TEXP,H_NI is;
+  class H_CFO0,H_DTAJ,H_CFO cfs;
+  class H_TP,H_DT,H_CASH,H_RE bs;</div>
+<p>Interview script:</p>
+<ul><li>Start with pretax income, apply tax expense, and that gets you to net income.</li><li>But tax expense is accounting tax, not always cash tax.</li><li>The current unpaid portion sits in taxes payable on the balance sheet.</li><li>If taxes payable goes up, you recognized expense but paid less cash, so that is a source of cash.</li><li>If taxes payable goes down, you paid more cash than current expense, so that is a use of cash.</li><li>Deferred tax assets and liabilities capture timing differences between book and tax accounting.</li><li>On the cash flow statement, you adjust net income for those timing differences to get to actual cash taxes.</li></ul></article>
+      </div>
+    </main>
+  </div>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'loose',
+      theme: 'base',
+      flowchart: { useMaxWidth: true, htmlLabels: true }
+    });
+    await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+  </script>
+</body>
+</html>
