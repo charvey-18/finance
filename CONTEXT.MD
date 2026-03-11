@@ -4,11 +4,12 @@
 Create interview-ready Mermaid diagrams that explain movement across the income statement, cash flow statement, and balance sheet for core finance interview topics.
 
 ## Current Phase
-Added a standalone browser HTML viewer for the finance interview diagram pack and validated that all Mermaid diagrams render in-browser.
+Published the finance workspace to GitHub after adding the standalone browser HTML viewer and validating browser rendering.
 
 ## Implemented Features
 - Added a standalone diagram pack at `three-statement-interview-diagrams.md`.
 - Added a browser-viewable export at `three-statement-interview-diagrams.html` with a wider study layout and section navigation.
+- Initialized Git in the workspace, created the first project commit, and pushed `main` to GitHub.
 - Covered topics A-H with a short explanation, one Mermaid flowchart, and a compact interview script per topic.
 - Added a dedicated scope section explaining what typically counts inside operating NWC and CapEx in interview settings.
 - Added explicit definitions for accounts receivable and accounts payable in the scope notes and working-capital section.
@@ -45,13 +46,14 @@ Added a standalone browser HTML viewer for the finance interview diagram pack an
 - 2026-03-09T19:10:56Z: Added matching plain-English definitions for prepaids, accrued expenses, and deferred revenue.
 - 2026-03-11T22:42:52Z: Added a standalone HTML viewer so the diagram pack can be reviewed in a browser instead of Markdown preview.
 - 2026-03-11T22:42:52Z: Kept the ESM Mermaid loader because it rendered all 10 diagrams cleanly in browser validation, while the non-module fallback regressed the overview diagram.
+- 2026-03-11T22:49:37Z: Initialized the workspace as a Git repo, created the initial commit, and pushed `main` to `https://github.com/charvey-18/finance.git`.
 
 ## Open Risks
 - Some firms define levered free cash flow slightly differently around mandatory debt amortization; the file notes the interview convention explicitly.
 - Companies and modeling tests may define operating NWC and CapEx differently, so the file now teaches the usual interview convention but still requires scope confirmation in edge cases.
 
 ## Next Immediate Task
-Let the user review the HTML export in a browser; if any section still feels cramped, split the densest topics into separate zoomed-in HTML pages or add print styling.
+Let the user review the published repo and HTML export; if needed, add an offline export or a static hosting setup for easier mobile viewing.
 
 ## Last Updated
-2026-03-11T22:42:52Z
+2026-03-11T22:49:37Z

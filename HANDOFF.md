@@ -1,7 +1,7 @@
 # HANDOFF
 
 ## Snapshot
-Workspace now contains both the Markdown study pack and a standalone HTML viewer; the browser export has been validated and all 10 Mermaid diagrams render successfully.
+Workspace now contains the Markdown study pack, a standalone HTML viewer, and a live GitHub repo on `origin/main`; the browser export has been validated and all 10 Mermaid diagrams render successfully.
 
 ## Latest Prompt Sync
 User asked for interview-ready Mermaid diagrams covering three-statement flow topics A-H, starting with EBITDA to levered free cash flow and then continuing through working capital, depreciation, CapEx, debt, interest, and taxes.
@@ -14,10 +14,13 @@ Latest follow-up asked for definitions of payables and receivables; those were a
 Current follow-up asked for the same treatment for prepaids, accrued expenses, and deferred revenue; those definitions were added.
 Newest follow-up asked for an easier browser-viewable format; a standalone HTML export was created and validated in-browser.
 Latest follow-up asked how to access the browser viewer on a phone; no file changes were needed, only local network access instructions.
+Newest follow-up asked to commit this workspace to `https://github.com/charvey-18/finance.git`; Git was initialized locally and pushed successfully.
 
 ## Active Engineering Notes
 - Main deliverable: `three-statement-interview-diagrams.md`
 - Browser viewer: `three-statement-interview-diagrams.html`
+- Git remote: `origin https://github.com/charvey-18/finance.git`
+- Initial published commit: `ec5f455a38b81aba421cd4d4fba1d90015dde8cf`
 - Sign conventions are consistent across sections: operating asset up = use, operating liability up = source.
 - File now includes a color legend and a vertical reference diagram before the topical sections.
 - All Mermaid blocks now include larger init settings for font size and spacing.
@@ -32,5 +35,5 @@ Latest follow-up asked how to access the browser viewer on a phone; no file chan
 
 ## Immediate Next Actions
 - Run the project-memory validator.
-- Point the user to the HTML file path and local browser URL.
+- Push the final memory-file sync commit so the remote reflects the latest workspace state.
 - If needed later, split dense topic diagrams into separate zoomed-in views or add print-friendly styling.
